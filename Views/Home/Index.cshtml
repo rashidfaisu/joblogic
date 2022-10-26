@@ -1,0 +1,49 @@
+﻿@model List<Customers>
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+
+
+
+<button onclick="@Url.Action("AddCustomer")">Add</button>
+
+
+<div class="card-body">
+    <div class="table-responsive">
+        <table class="table table-bordered" id="tblData" width="100%" cellspacing="0">
+            <thead>
+                <tr>
+                    @*<th class="minwidth">SlNo.</th>*@
+                    <th>Title</th>
+                    <th>First Name</th>
+                    <th>SurName</th>
+                    <th>Address1</th>
+                    <th>PostCode</th>
+                    <th>Phone</th>
+                    <th class="minwidth"><i class="fas fa-pencil-alt"></i></th>
+                    <th class="minwidth"><i class="fas fa-trash"></i></th>
+                </tr>
+            </thead>
+
+            <tbody>
+                @if (Model != null)
+            {
+                foreach (Customers item in Model)
+                {
+                <tr>
+                    <td>@item.Title</td>
+                    <td>@item.FirstName</td>
+                    <td>@item.SurName</td>
+                    <td>@item.Address1</td>
+                    <td>@item.PostCode</td>
+                    <td>@item.Phone</td>
+                    <td><button onclick="@Url.Action("AddCustomer",item)">Edit</button></td>
+                    <td><button>Delete</button></td>
+                </tr>
+                }
+            }
+            </tbody>
+        </table>
+    </div>
+</div>
