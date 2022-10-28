@@ -27,22 +27,41 @@ namespace JobLogic.Controllers
         #region Customer
         public IActionResult Index()
         {
-            List<Customers> DataList = new List<Customers>();
-            DataList = objCust.GetCustomers();
-            return View(DataList);
+            return RedirectToAction("Customer");
         }
 
-        public IActionResult AddCustomer()
+        public IActionResult Customer()
         {
-            Customers Costomer = new Customers();
-            return View(Costomer);
+            var datalist = objCust.GetCustomers();
+            return View(datalist);
         }
 
-        public IActionResult SaveCustomer(Customers Customer)
+        public IActionResult Details(Customers data)
         {
-            objCust.AddCustomer(Customer);
+            return View(data);
+        }
 
-            return RedirectToAction("Index");
+        public IActionResult Edit(Customers data)
+        {
+            return View("AddCustomer", data);
+        }
+
+        public IActionResult AddCustomer(Customers data)
+        {
+            objCust.AddCustomer(data);
+            return RedirectToAction("Customer");
+        }
+
+        public IActionResult Delete(Customers data)
+        {
+            objCust.DeleteCustomer(data);
+            return RedirectToAction("Customer");
+        }
+
+        public IActionResult Create()
+        {
+            var data = new Customers();
+            return View("AddCustomer", data);
         }
 
         #endregion Customer

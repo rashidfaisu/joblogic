@@ -10,16 +10,18 @@ namespace JobLogic.Repository
 {
     public class CustomerRepo:ICustomerService
     {
+        private readonly CustomerDbContext context;
+
+        public CustomerRepo(CustomerDbContext context)
+        {
+            this.context = context;
+        }
         public List<Customers> GetCustomers(int id=0)
         {
             var data = new List<Customers>();
             try
             {
-                using (var dbContext = new CustomerDbContext())
-                {
-                    data = dbContext.Customers.Where(a => a.CustomerId == id || id == 0 ).ToList();
-                }
-
+                data = context.Customers.Where(a => a.CustomerId == id || id == 0).ToList();
             }
             catch (Exception ex)
             {
@@ -32,22 +34,18 @@ namespace JobLogic.Repository
         {
             try
             {
-                using (var dbContext = new CustomerDbContext())
+                if (Customer.CustomerId > 0)
                 {
-
-                    if (Customer.CustomerId > 0)
-                    {
-                        dbContext.Update(Customer);
-                    }
-                    else
-
-                    {
-                        dbContext.Add(Customer);
-                    }
-                    dbContext.SaveChanges();
-
-                    return true;
+                    context.Update(Customer);
                 }
+                else
+
+                {
+                    context.Add(Customer);
+                }
+                context.SaveChanges();
+
+                return true;
             }
             catch (Exception ex)
             {
@@ -56,22 +54,18 @@ namespace JobLogic.Repository
             }
         }
 
-        public bool DeleteCustomer(int id = 0)
+        public bool DeleteCustomer(Customers Customer)
         {
             try
             {
-                using (var dbContext = new CustomerDbContext())
+                context.Database.BeginTransaction();
+                if (Customer.CustomerId > 0)
                 {
-                    dbContext.Database.BeginTransaction();
-                    if (id > 0)
-                    {
-                        var thisdata = dbContext.Customers.Where(a => a.CustomerId == id).FirstOrDefault();
-                        dbContext.Customers.Remove(thisdata);
-                        dbContext.SaveChanges();
-                    }
-                    dbContext.Database.CommitTransaction();
-                    return true;
+                    context.Remove(Customer);
+                    context.SaveChanges();
                 }
+                context.Database.CommitTransaction();
+                return true;
             }
             catch (Exception ex)
             {

@@ -10,6 +10,6 @@ namespace JobLogic.Services
     {
         public List<Customers> GetCustomers(int id=0);
         public bool AddCustomer(Customers Customer);
-        public bool DeleteCustomer(int id = 0);
+        public bool DeleteCustomer(Customers Customer);
     }
 }
